@@ -1,5 +1,7 @@
 package com.example.minha_loja_de_game.model;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -7,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -14,22 +17,32 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table (name= "tb_produtos")
 public class Produtos {
+	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY) 
 	private long id;
 	
-	@NotNull(message = "O atributo nome é obrigatorio!")
-	@Size(min = 5, max = 50, message = "O atributo nome deve ter no minimo 5 e no maximo 50 caracteres")
+	@NotNull                                       										
 	private String nome;
 	
-	@NotNull(message = "O atributo preço é obrigatorio!")
-	@Size(min = 5, max = 100, message = "O atributo texto deve ter no minimo 5 e no maximo 1000 caracteres")
-	private double preco;
-
+	@Size(min = 5, max = 500)
+	private String descricao;
+	
+	@NotNull
+	private String console;
+	
+	@NotNull
+	@Positive
+	private BigDecimal preco;
+	
 	@ManyToOne
 	@JsonIgnoreProperties("produto")
-	private Produtos produto;
+	private Categoria categoria;
 	
+	@ManyToOne
+	@JsonIgnoreProperties("produto")
+	private Usuario usuario;
+
 	public long getId() {
 		return id;
 	}
@@ -46,11 +59,44 @@ public class Produtos {
 		this.nome = nome;
 	}
 
-	public double getPreco() {
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+
+	public String getConsole() {
+		return console;
+	}
+
+	public void setConsole(String console) {
+		this.console = console;
+	}
+
+	public BigDecimal getPreco() {
 		return preco;
 	}
 
-	public void setPreco(double preco) {
+	public void setPreco(BigDecimal preco) {
 		this.preco = preco;
 	}
+
+	public Categoria getCategoria() {
+		return categoria;
+	}
+
+	public void setCategoria(Categoria categoria) {
+		this.categoria = categoria;
+	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+	
 }

@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.minha_loja_de_game.model.CategoriaModel;
+import com.example.minha_loja_de_game.model.Categoria;
 import com.example.minha_loja_de_game.repository.CategoriaRepository;
 
 
 @RestController
-@RequestMapping("/Categoria")
+@RequestMapping("/categorias")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class CategoriaController {
 
@@ -28,26 +28,40 @@ public class CategoriaController {
 	private CategoriaRepository categoriaRepository;
 	
 	@GetMapping
-	public ResponseEntity<List<CategoriaModel>> getAll(){
+	private ResponseEntity<List<Categoria>> getAll(){
+		
 		return ResponseEntity.ok(categoriaRepository.findAll());
 	}
-	@GetMapping("/descricao/{descricao}")
-	public ResponseEntity<List<CategoriaModel>> getByDescricao(@PathVariable String descricao){
-		return ResponseEntity.ok(categoriaRepository.findAllByDescricaoContainingIgnoreCase(descricao));
+
+	@GetMapping("/{id}")
+	private ResponseEntity<Categoria> getById(@PathVariable long id){
+		
+		return categoriaRepository.findById(id)
+		.map(resp -> ResponseEntity.ok(resp))
+		.orElse(ResponseEntity.notFound().build());
+	}
+	
+	@GetMapping("/tipo/{tipo}")
+	public ResponseEntity<List<Categoria>> GetByTipo(@PathVariable String tipo){
+		
+		return ResponseEntity.ok(categoriaRepository.findAllByTipoContainingIgnoreCase(tipo));	
 	}
 	
 	@PostMapping
-	public ResponseEntity<CategoriaModel> postTema(@RequestBody CategoriaModel categoria){
+	public ResponseEntity<Categoria> post (@RequestBody Categoria categoria){
+		
 		return ResponseEntity.status(HttpStatus.CREATED).body(categoriaRepository.save(categoria));
 	}
 	
 	@PutMapping
-	public ResponseEntity<CategoriaModel> putTema(@RequestBody CategoriaModel categoria){
+	public ResponseEntity<Categoria> put (@RequestBody Categoria categoria){
+		
 		return ResponseEntity.status(HttpStatus.OK).body(categoriaRepository.save(categoria));
 	}
 	
 	@DeleteMapping("/{id}")
-	public void deleteCategoria(@PathVariable long id) {
+	public void deleteId(@PathVariable long id) {
+		
 		categoriaRepository.deleteById(id);
 	}
 	
